@@ -38,25 +38,17 @@ func Toggle(w http.ResponseWriter, r *http.Request) {
 	projectId := os.Getenv("PROJECT_ID")
 	projectRegion := os.Getenv("REGION")
 
-	computeService, err := compute.NewService(ctx)
+	var computeService *compute.Service
+	var err error
+	if len(input) != 0 {
+		computeService, err = compute.NewService(ctx, option.WithCredentialsFile(string(input)))
+	} else {
+		computeService, err = compute.NewService(ctx)
+	}
 	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	}
-
-	if len(input) != 0 {
-		var js interface{}
-		if json.Unmarshal([]byte(input), &js) == nil {
-			computeService, err = compute.NewService(ctx, option.WithCredentialsJSON(input))
-		} else {
-			computeService, err = compute.NewService(ctx, option.WithCredentialsFile(string(input)))
-		}
-		if err != nil {
-			fmt.Println(err.Error())
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
 	}
 
 	region, err := computeService.Regions.Get(projectId, projectRegion).Do()
