@@ -1,1 +1,0 @@
-replace github.com/efbar/more-serverless/google/toggle => ./function/toggle

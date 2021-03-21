@@ -31,7 +31,11 @@ func Toggle(w http.ResponseWriter, r *http.Request) {
 		input = reqBody
 	}
 
-	fmt.Printf("request body: %s", string(input))
+	if len(input) != 0 {
+		fmt.Printf("request body: %s", string(input))
+	} else {
+		fmt.Println("empty body")
+	}
 
 	ctx := context.Background()
 
