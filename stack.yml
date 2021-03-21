@@ -3,20 +3,9 @@ provider:
   name: openfaas
   gateway: http://faasd-gateway:8080
 functions:
-  gce-toggle-basic:
-    lang: go
-    handler: ./gce-toggle-basic
-    image: efbar/gce-toggle:basic-0.0.1
-    secrets:
-      - sa-gcp # faas-cli secret create sa-gcp --from-file=/path/to/file/sa-key.json
-    build_args:
-      GO111MODULE: on
-    environment:
-      PROJECT_ID: "functest-307416"
-      REGION: "us-central1"
-  gce-toggle-middleware:
+  gce-toggle:
     lang: golang-middleware
-    handler: ./gce-toggle-middleware
+    handler: ./gce-toggle
     image: efbar/gce-toggle:golang-middleware-0.0.1
     secrets:
       - sa-gcp # faas-cli secret create sa-gcp --from-file=/path/to/file/sa-key.json
