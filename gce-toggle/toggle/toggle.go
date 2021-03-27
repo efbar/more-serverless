@@ -2,7 +2,6 @@ package toggle
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -78,7 +77,7 @@ func Toggle(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				if started.HTTPStatusCode == 200 {
-					out = append(out, ", turning "+v.Name+" ON! |")
+					out = append(out, ", turning "+v.Name+" ON!\n")
 				}
 			} else {
 				stopped, err := computeService.Instances.Stop(projectId, v.Zone[strings.LastIndex(v.Zone, "/")+1:], strconv.FormatUint(instanceId, 10)).Do()
@@ -88,7 +87,7 @@ func Toggle(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				if stopped.HTTPStatusCode == 200 {
-					out = append(out, ", turning "+v.Name+" OFF! |")
+					out = append(out, ", turning "+v.Name+" OFF!\n")
 				}
 			}
 		}
@@ -110,7 +109,7 @@ func Toggle(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if instanceGroup.HTTPStatusCode == 200 {
-				out = append(out, " Scaling "+v.Name+" DOWN to zero instances! |")
+				out = append(out, "Scaling "+v.Name+" DOWN to zero instances!\n")
 			}
 		} else {
 			instanceGroup, err := computeService.RegionInstanceGroupManagers.Resize(projectId, projectRegion, v.Name, 3).Do()
@@ -120,30 +119,13 @@ func Toggle(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if instanceGroup.HTTPStatusCode == 200 {
-				out = append(out, " Scaling "+v.Name+" UP to three instances!")
+				out = append(out, "Scaling "+v.Name+" UP to three instances!\n")
 			}
 		}
 	}
 
-	response := struct {
-		Payload     string              `json:"payload"`
-		Headers     map[string][]string `json:"headers"`
-		Environment []string            `json:"environment"`
-	}{
-		Payload:     strings.Join(out, ""),
-		Headers:     r.Header,
-		Environment: os.Environ(),
-	}
-
-	resBody, err := json.Marshal(response)
-	if err != nil {
-		fmt.Println(err.Error())
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	w.WriteHeader(http.StatusOK)
-	w.Write(resBody)
+	w.Header().Set("Content-type", "text/plain")
+	w.Write([]byte(strings.Join(out, "")))
 
-	return
 }
