@@ -6,7 +6,7 @@ functions:
   gce-toggle:
     lang: golang-middleware
     handler: ./gce-toggle
-    image: efbar/efbar/serverless-libs:gce-toggle-0.0.1
+    image: efbar/serverless-libs:gce-toggle-0.0.1
     secrets:
       - sa-gcp # faas-cli secret create sa-gcp --from-file=/path/to/file/sa-key.json
     build_args:
@@ -17,13 +17,13 @@ functions:
   nomad-jobs-list:
     lang: golang-middleware
     handler: ./nomad-jobs-list
-    image: efbar/efbar/serverless-libs:nomad-jobs-list-0.0.1
+    image: efbar/serverless-libs:nomad-jobs-list-0.0.1
     build_args:
       GO111MODULE: on
   functions:
     nomad-nodes-list:
       lang: golang-middleware
       handler: ./nomad-nodes-list
-      image: efbar/efbar/serverless-libs:nomad-nodes-list-0.0.1
+      image: efbar/serverless-libs:nomad-nodes-list-0.0.1
     build_args:
       GO111MODULE: on
