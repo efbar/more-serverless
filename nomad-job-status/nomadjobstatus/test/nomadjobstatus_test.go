@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	nomadjobstatus "github.com/efbar/more-serverless/build/nomad-job-status/function/nomadjobstatus"
+	nomadjobstatus "github.com/efbar/more-serverless/nomad-job-status/nomadjobstatus"
 	nomad "github.com/hashicorp/nomad/api"
 	testutil "github.com/hashicorp/nomad/testutil"
 )
