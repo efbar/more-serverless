@@ -83,7 +83,6 @@ func TestFunc(t *testing.T) {
 		t.Log("client token:", out.SecretID)
 		t.Log("client policies:", out.Policies)
 
-		// get jobs
 		jsonStruct["token"] = out.SecretID
 	}
 

@@ -64,15 +64,14 @@ func List(w http.ResponseWriter, r *http.Request) {
 	conf.Address = nomadEndpoint
 
 	client, err := nomad.NewClient(conf)
-
-	if rb.Token != "" {
-		client.SetSecretID(rb.Token)
-	}
-
 	if err != nil {
 		fmt.Println(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+	}
+
+	if rb.Token != "" {
+		client.SetSecretID(rb.Token)
 	}
 
 	jobs := client.Jobs()
