@@ -1,4 +1,4 @@
-package nomadjobs
+package nomadjobstatus
 
 import (
 	"encoding/json"

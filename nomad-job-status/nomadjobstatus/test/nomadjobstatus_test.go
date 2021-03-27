@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	nomadjobs "github.com/efbar/more-serverless/nomad-jobs-list/nomadjobs"
+	nomadjobstatus "github.com/efbar/more-serverless/build/nomad-job-status/function/nomadjobstatus"
 	nomad "github.com/hashicorp/nomad/api"
 	testutil "github.com/hashicorp/nomad/testutil"
 )
@@ -108,7 +108,7 @@ func TestFunc(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 
-	handler := http.HandlerFunc(nomadjobs.List)
+	handler := http.HandlerFunc(nomadjobstatus.List)
 
 	handler.ServeHTTP(rr, req)
 
