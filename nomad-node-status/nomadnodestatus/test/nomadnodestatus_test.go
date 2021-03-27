@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/efbar/more-serverless/nomad-nodes-list/nomadnodes"
+	nomadnodestatus "github.com/efbar/more-serverless/nomad-node-status/nomadnodestatus"
 	nomad "github.com/hashicorp/nomad/api"
 	testutil "github.com/hashicorp/nomad/testutil"
 )
@@ -103,7 +103,7 @@ func TestFunc(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 
-	handler := http.HandlerFunc(nomadnodes.List)
+	handler := http.HandlerFunc(nomadnodestatus.List)
 
 	handler.ServeHTTP(rr, req)
 

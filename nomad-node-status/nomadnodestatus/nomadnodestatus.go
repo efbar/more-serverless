@@ -1,4 +1,4 @@
-package nomadnodes
+package nomadnodestatus
 
 import (
 	"encoding/json"

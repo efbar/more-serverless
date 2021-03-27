@@ -3,11 +3,11 @@ package function
 import (
 	"net/http"
 
-	nomadnodes "github.com/efbar/more-serverless/nomad-nodes-list/nomadnodes"
+	nomadnodestatus "github.com/efbar/more-serverless/nomad-node-status/nomadnodestatus"
 )
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	nomadnodes.List(w, r)
+	nomadnodestatus.List(w, r)
 
 }

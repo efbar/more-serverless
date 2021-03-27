@@ -1,1 +1,1 @@
-replace github.com/efbar/more-serverless/nomad-nodes-list/nomadnodes => ./function/nomadnodes
+replace github.com/efbar/more-serverless/nomad-node-status/nomadnodestatus => ./function/nomadnodestatus
