@@ -26,3 +26,9 @@ functions:
     image: efbar/more-serverless:nomad-node-status-0.0.1
     build_args:
       GO111MODULE: on
+  nomad-server-members:
+    lang: golang-middleware
+    handler: ./nomad-server-members
+    image: efbar/more-serverless:nomad-server-members-0.0.1
+    build_args:
+      GO111MODULE: on
