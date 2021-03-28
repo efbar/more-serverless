@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
 	"testing"
 
 	nomadservermembers "github.com/efbar/more-serverless/nomad-server-members/nomadservermembers"
@@ -26,18 +25,12 @@ func TestFunc(t *testing.T) {
 		c.ACL.Enabled = ACLEnabled
 		c.LogLevel = Loglevel
 		c.DevMode = true
-		// c.Ports = &testutil.PortsConfig{
-		// 	HTTP: c.Ports.HTTP + 1,
-		// 	RPC:  c.Ports.RPC + 1,
-		// 	Serf: c.Ports.Serf + 1,
-		// }
 	})
 	defer server.Stop()
 
 	// Create client
 	conf := nomad.DefaultConfig()
-	newAddr, _ := strconv.Atoi(server.HTTPAddr)
-	conf.Address = "http://" + strconv.Itoa(newAddr+1)
+	conf.Address = "http://" + server.HTTPAddr
 
 	client, err := nomad.NewClient(conf)
 	fmt.Println(conf)
