@@ -1,0 +1,1 @@
+replace github.com/efbar/more-serverless/consul-members/consulmembers => ./function/consulmembers

@@ -32,3 +32,9 @@ functions:
     image: efbar/more-serverless:nomad-server-members-0.0.1
     build_args:
       GO111MODULE: on
+  consul-members:
+    lang: golang-middleware
+    handler: ./consul-members
+    image: efbar/more-serverless:consul-members-0.0.1
+    build_args:
+      GO111MODULE: on
