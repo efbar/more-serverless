@@ -12,7 +12,6 @@ import (
 
 	"github.com/ryanuber/columnize"
 
-	"github.com/hashicorp/nomad/api"
 	nomad "github.com/hashicorp/nomad/api"
 )
 
@@ -89,7 +88,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sort.Sort(api.AgentMembersNameSort(m.Members))
+	sort.Sort(nomad.AgentMembersNameSort(m.Members))
 
 	resBody := ""
 	if r.Header.Get("Content-Type") == "text/plain" {
