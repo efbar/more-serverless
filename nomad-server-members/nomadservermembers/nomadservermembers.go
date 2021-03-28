@@ -49,11 +49,11 @@ func List(w http.ResponseWriter, r *http.Request) {
 		input = body
 	}
 
-	if len(input) != 0 {
-		fmt.Printf("request body: %s\n", string(input))
-	} else {
-		fmt.Println("empty body")
-	}
+	// if len(input) != 0 {
+	// 	fmt.Printf("request body: %s\n", string(input))
+	// } else {
+	// 	fmt.Println("empty body")
+	// }
 
 	rb := RequestBody{}
 	json.Unmarshal(input, &rb)
