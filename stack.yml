@@ -38,3 +38,9 @@ functions:
     image: efbar/more-serverless:consul-members-0.0.1
     build_args:
       GO111MODULE: on
+  consul-catalog-services:
+    lang: golang-middleware
+    handler: ./consul-catalog-services
+    image: efbar/more-serverless:consul-catalog-services-0.0.1
+    build_args:
+      GO111MODULE: on
