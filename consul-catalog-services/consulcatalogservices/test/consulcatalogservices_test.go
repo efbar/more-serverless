@@ -133,7 +133,7 @@ func TestFunc(t *testing.T) {
 
 		rr := httptest.NewRecorder()
 
-		handler := http.HandlerFunc(consulcatalogservices.List)
+		handler := http.HandlerFunc(consulcatalogservices.Serve)
 
 		handler.ServeHTTP(rr, req)
 

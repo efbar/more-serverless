@@ -8,5 +8,5 @@ import (
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	consulcatalogservices.List(w, r)
+	consulcatalogservices.Serve(w, r)
 }

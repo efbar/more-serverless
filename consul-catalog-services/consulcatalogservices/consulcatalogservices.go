@@ -1,4 +1,4 @@
-package consulmembers
+package consulcatalogservices
 
 import (
 	"encoding/json"
@@ -27,7 +27,7 @@ type SimpleService struct {
 	Tags []string `json:"tags,omitempty"`
 }
 
-func List(w http.ResponseWriter, r *http.Request) {
+func Serve(w http.ResponseWriter, r *http.Request) {
 	var input []byte
 
 	if r.Body != nil {
