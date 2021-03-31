@@ -1,0 +1,29 @@
+PROJECT_NAME=more-serverless
+VERSION=1.0.0
+
+# buildgcf func project_id region
+buildgcf:
+    
+	@-gcloud config set project $(project_id)
+	@-$(eval SUBF := $(shell echo $(func)| tr -d '-'))
+	@-cd $(func)/$(SUBF) && gcloud functions deploy $(func) --entry-point=List --runtime=go113 --trigger-http --set-env-vars "PROJECT_ID=$(project_id),REGION=$(region)" --memory 128M --quiet
+
+# faasdelete func
+faasdelete:
+
+	@-faas-cli remove --filter $(func)
+
+
+# faasup func
+faasup: faasdelete $(func)
+
+	@-faas-cli up --filter $(func)
+
+.PHONY: help test clean
+help: Makefile
+	@echo
+	@echo " Choose a command from list below"
+	@echo " usage: make <command>"
+	@echo
+	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@echo
