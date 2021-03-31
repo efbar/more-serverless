@@ -1,0 +1,1 @@
+replace github.com/efbar/more-serverless/consul-op-raft-list/consulopraftlist => ./function/consulopraftlist

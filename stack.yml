@@ -44,3 +44,9 @@ functions:
     image: efbar/more-serverless:consul-catalog-services-0.0.1
     build_args:
       GO111MODULE: on
+  consul-op-raft-list:
+    lang: golang-middleware
+    handler: ./consul-op-raft-list
+    image: efbar/more-serverless:consul-op-raft-list-0.0.1
+    build_args:
+      GO111MODULE: on
