@@ -6,7 +6,7 @@ buildgcf:
     
 	@-gcloud config set project $(project_id)
 	@-$(eval SUBF := $(shell echo $(func)| tr -d '-'))
-	@-cd $(func)/$(SUBF) && gcloud functions deploy $(func) --entry-point=List --runtime=go113 --trigger-http --set-env-vars "PROJECT_ID=$(project_id),REGION=$(region)" --memory 128M --quiet
+	@-cd $(func)/$(SUBF) && gcloud functions deploy $(func) --entry-point=Serve --runtime=go113 --trigger-http --set-env-vars "PROJECT_ID=$(project_id),REGION=$(region)" --memory 128M --quiet
 
 # faasdelete func
 faasdelete:
