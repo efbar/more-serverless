@@ -17,15 +17,15 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
 
 Every folder contains everything to deploy a function. The provided functions are (this list will be updated constantly):
 
-|  Function | Description |
-| --- | --- |
-|gce-toggle|  |
-|consul-catalog-services|  |
-|consul-members|  |
-|consul-op-raft-list|  |
-|nomad-job-status|  |
-|nomad-node-status|  |
-|nomad-server-members|  |
+|  Function | Description | Input | Output |
+| --- | --- |---|---|
+|gce-toggle| Stop and start every vm, downscales or scales up every managed regional instance group in a GCP project | Project id via env variable|List of which machine or instance group has been modified|
+|consul-catalog-services| same of `consul catalog services` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}` |same as consul command but with `-tag` option enabled, content-type could be json and text/plain|
+|consul-members| same of `consul members` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`|same as consul command, content-type could be json and text/plain|
+|consul-op-raft-list| same as `consul operator raft list-peers` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`|same as consul command, content-type could be json and text/plain|
+|nomad-job-status| same as `nomad job status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
+|nomad-node-status| same as `nomad node status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
+|nomad-server-members| same as `nomad server members` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
 
 In the root folder you can see `stack.yml`. This file is useful to deploy function in OpenFaas, read above for a quick guide.
 
