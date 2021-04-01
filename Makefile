@@ -1,20 +1,20 @@
 PROJECT_NAME=more-serverless
 VERSION=1.0.0
 
-# buildgcf func project_id region
+## - buildgcf func=<function> project_id=<project_id> region=<region>, deploy function on Google Cloud Function
 buildgcf:
     
 	@-gcloud config set project $(project_id)
 	@-$(eval SUBF := $(shell echo $(func)| tr -d '-'))
 	@-cd $(func)/$(SUBF) && gcloud functions deploy $(func) --entry-point=Serve --runtime=go113 --trigger-http --set-env-vars "PROJECT_ID=$(project_id),REGION=$(region)" --memory 128M --quiet
 
-# faasdelete func
+## - faasdelete func=<function>, delete function from OpenFaas
 faasdelete:
 
 	@-faas-cli remove --filter $(func)
 
 
-# faasup func
+## - faasup func=<function>, deploy function on OpenFaas
 faasup: faasdelete $(func)
 
 	@-faas-cli up --filter $(func)
