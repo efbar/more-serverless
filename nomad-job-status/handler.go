@@ -8,6 +8,6 @@ import (
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	nomadjobstatus.List(w, r)
+	nomadjobstatus.Serve(w, r)
 
 }

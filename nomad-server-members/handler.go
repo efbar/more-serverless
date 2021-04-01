@@ -8,5 +8,5 @@ import (
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	nomadservermembers.List(w, r)
+	nomadservermembers.Serve(w, r)
 }

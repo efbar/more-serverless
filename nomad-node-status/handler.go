@@ -8,6 +8,6 @@ import (
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	nomadnodestatus.List(w, r)
+	nomadnodestatus.Serve(w, r)
 
 }

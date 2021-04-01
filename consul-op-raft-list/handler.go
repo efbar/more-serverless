@@ -8,6 +8,6 @@ import (
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	consulopraftlist.List(w, r)
+	consulopraftlist.Serve(w, r)
 
 }

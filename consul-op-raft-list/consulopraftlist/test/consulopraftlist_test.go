@@ -119,7 +119,7 @@ func TestFunc(t *testing.T) {
 
 		rr := httptest.NewRecorder()
 
-		handler := http.HandlerFunc(consulopraftlist.List)
+		handler := http.HandlerFunc(consulopraftlist.Serve)
 
 		handler.ServeHTTP(rr, req)
 

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/ryanuber/columnize"
 
@@ -34,7 +35,7 @@ type Node struct {
 	Status                *string `json:"status"`
 }
 
-func List(w http.ResponseWriter, r *http.Request) {
+func Serve(w http.ResponseWriter, r *http.Request) {
 	var input []byte
 
 	if r.Body != nil {
@@ -90,7 +91,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 			if len(v.NodeClass) == 0 {
 				v.NodeClass = "<none>"
 			}
-			out = append(out, v.ID+"\t"+v.Datacenter+"\t"+v.Name+"\t"+v.NodeClass+"\t"+strconv.FormatBool(v.Drain)+"\t"+v.SchedulingEligibility+"\t"+v.Status)
+			ID := strings.Split(v.ID, "-")
+			out = append(out, ID[0]+"\t"+v.Datacenter+"\t"+v.Name+"\t"+v.NodeClass+"\t"+strconv.FormatBool(v.Drain)+"\t"+v.SchedulingEligibility+"\t"+v.Status)
 		}
 		columnConf := columnize.DefaultConfig()
 		columnConf.Delim = "\t"

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/ryanuber/columnize"
@@ -19,9 +18,8 @@ type RequestBody struct {
 }
 
 type Response struct {
-	Payload     []Job               `json:"payload"`
-	Headers     map[string][]string `json:"headers"`
-	Environment []string            `json:"environment"`
+	Payload []Job               `json:"payload"`
+	Headers map[string][]string `json:"headers"`
 }
 
 type Job struct {
@@ -33,7 +31,7 @@ type Job struct {
 	SubmitTime *int64  `json:"submitTime"`
 }
 
-func List(w http.ResponseWriter, r *http.Request) {
+func Serve(w http.ResponseWriter, r *http.Request) {
 
 	var input []byte
 
@@ -110,9 +108,8 @@ func List(w http.ResponseWriter, r *http.Request) {
 			jobList = append(jobList, job)
 		}
 		jsonResponse := Response{
-			Payload:     jobList,
-			Headers:     r.Header,
-			Environment: os.Environ(),
+			Payload: jobList,
+			Headers: r.Header,
 		}
 		resBody, err := json.Marshal(jsonResponse)
 		if err != nil {

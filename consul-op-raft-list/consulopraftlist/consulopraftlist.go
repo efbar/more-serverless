@@ -11,6 +11,11 @@ import (
 	"github.com/ryanuber/columnize"
 )
 
+type RequestBody struct {
+	Token    string `json:"token"`
+	Endpoint string `json:"endpoint"`
+}
+
 type Response struct {
 	Payload []Peer              `json:"payload"`
 	Headers map[string][]string `json:"headers"`
@@ -25,12 +30,7 @@ type Peer struct {
 	RaftProtocol string  `json:"raft-protocol"`
 }
 
-type RequestBody struct {
-	Token    string `json:"token"`
-	Endpoint string `json:"endpoint"`
-}
-
-func List(w http.ResponseWriter, r *http.Request) {
+func Serve(w http.ResponseWriter, r *http.Request) {
 
 	var input []byte
 
