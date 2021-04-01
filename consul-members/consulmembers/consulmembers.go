@@ -12,7 +12,6 @@ import (
 	"github.com/ryanuber/columnize"
 
 	consul "github.com/hashicorp/consul/api"
-	member "github.com/hashicorp/consul/command/members"
 )
 
 type RequestBody struct {
@@ -36,6 +35,21 @@ type AgentMember struct {
 	Build       string `json:"build"`
 	Datacenter  string `json:"dc"`
 	Segment     string `json:"segment"`
+}
+
+type ByMemberNameAndSegment []*consul.AgentMember
+
+func (m ByMemberNameAndSegment) Len() int      { return len(m) }
+func (m ByMemberNameAndSegment) Swap(i, j int) { m[i], m[j] = m[j], m[i] }
+func (m ByMemberNameAndSegment) Less(i, j int) bool {
+	switch {
+	case m[i].Tags["segment"] < m[j].Tags["segment"]:
+		return true
+	case m[i].Tags["segment"] > m[j].Tags["segment"]:
+		return false
+	default:
+		return m[i].Name < m[j].Name
+	}
 }
 
 func List(w http.ResponseWriter, r *http.Request) {
@@ -87,7 +101,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sort.Sort(member.ByMemberNameAndSegment(members))
+	sort.Sort(ByMemberNameAndSegment(members))
 
 	resBody := ""
 	if r.Header.Get("Content-Type") == "text/plain" {
