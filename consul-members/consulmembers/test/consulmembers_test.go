@@ -118,7 +118,7 @@ func TestFunc(t *testing.T) {
 
 		rr := httptest.NewRecorder()
 
-		handler := http.HandlerFunc(consulmembers.List)
+		handler := http.HandlerFunc(consulmembers.Serve)
 
 		handler.ServeHTTP(rr, req)
 

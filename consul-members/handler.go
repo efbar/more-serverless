@@ -8,5 +8,5 @@ import (
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	consulmembers.List(w, r)
+	consulmembers.Serve(w, r)
 }

@@ -52,7 +52,7 @@ func (m ByMemberNameAndSegment) Less(i, j int) bool {
 	}
 }
 
-func List(w http.ResponseWriter, r *http.Request) {
+func Serve(w http.ResponseWriter, r *http.Request) {
 	var input []byte
 
 	if r.Body != nil {
