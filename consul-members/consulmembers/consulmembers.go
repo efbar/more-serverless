@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"sort"
 	"strings"
 
-	"github.com/ryanuber/columnize"
-
 	consul "github.com/hashicorp/consul/api"
+	"github.com/ryanuber/columnize"
 )
 
 type RequestBody struct {
@@ -20,9 +18,8 @@ type RequestBody struct {
 }
 
 type Response struct {
-	Payload     []AgentMember       `json:"payload"`
-	Headers     map[string][]string `json:"headers"`
-	Environment []string            `json:"environment"`
+	Payload []AgentMember       `json:"payload"`
+	Headers map[string][]string `json:"headers"`
 }
 
 type AgentMember struct {
@@ -135,9 +132,8 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 			memberList = append(memberList, member)
 		}
 		jsonResponse := Response{
-			Payload:     memberList,
-			Headers:     r.Header,
-			Environment: os.Environ(),
+			Payload: memberList,
+			Headers: r.Header,
 		}
 		resBody, err := json.Marshal(jsonResponse)
 		if err != nil {
