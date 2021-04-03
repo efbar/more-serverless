@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/vault/api"
 	vault "github.com/hashicorp/vault/api"
 	"github.com/ryanuber/columnize"
 )
@@ -97,7 +96,7 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 
 	leaderStatus, err := client.Sys().Leader()
 	if err != nil && strings.Contains(err.Error(), "Vault is sealed") {
-		leaderStatus = &api.LeaderResponse{HAEnabled: true}
+		leaderStatus = &vault.LeaderResponse{HAEnabled: true}
 		err = nil
 	}
 	if err != nil {
