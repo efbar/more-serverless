@@ -26,6 +26,7 @@ Every folder contains everything to deploy a function. The provided functions ar
 |nomad-job-status| same as `nomad job status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
 |nomad-node-status| same as `nomad node status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
 |nomad-server-members| same as `nomad server members` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
+|vault-status| same as `vault status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
 
 In the root folder you can see `stack.yml`. This file is useful to deploy function in OpenFaas, read above for a quick guide.
 
