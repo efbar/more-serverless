@@ -50,3 +50,9 @@ functions:
     image: efbar/more-serverless:consul-op-raft-list-0.0.1
     build_args:
       GO111MODULE: on
+  vault-status:
+    lang: golang-middleware
+    handler: ./vault-status
+    image: efbar/more-serverless:vault-status-0.0.1
+    build_args:
+      GO111MODULE: on
