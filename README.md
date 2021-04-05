@@ -1,49 +1,76 @@
 # More Serverless
 
-A collection of serverless functions written in GO.
+This repo contains a collection of serverless functions written in GO that can be deployed to services like Openfaas, Google Cloud Functions and Google Cloud Run.
+
+If you want to try OpenFaas locally have a look at [https://github.com/efbar/hashicorp-labs](https://github.com/efbar/hashicorp-labs).
 
 **Table of Contents**
 - [More Serverless](#more-serverless)
   - [Usage](#usage)
+    - [Requirements](#requirements)
     - [Google Cloud Functions](#google-cloud-functions)
+    - [Google Cloud Run](#google-cloud-run)
     - [OpenFAAS](#openfaas)
+      - [faas up](#faas-up)
+      - [faas delete](#faas-delete)
+  - [Functions](#functions)
+    - [Google](#google)
+      - [gce-toggle](#gce-toggle)
+    - [Hashicorp Vault](#hashicorp-vault)
+      - [vault-status](#vault-status)
+      - [vault-read](#vault-read)
+    - [Hashicorp Consul](#hashicorp-consul)
+      - [consul-catalog-services](#consul-catalog-services)
+      - [consul-members](#consul-members)
+      - [consul-op-raft-list](#consul-op-raft-list)
+    - [Hashicorp Nomad](#hashicorp-nomad)
+      - [nomad-job-status](#nomad-job-status)
+      - [nomad-node-status](#nomad-node-status)
+      - [nomad-server-members](#nomad-server-members)
 
 ## Usage
 
-This repo contains functions to be deployed with services like Google Cloud Functions and similar.
-But it provides also some components to let you deploy them in OpenFaas.
+Makefile can help you to perform functions building and deploying.
 
-If you want to try OpenFaas locally have a look at [https://github.com/efbar/hashicorp-labs](https://github.com/efbar/hashicorp-labs).
+Run the following for some explanation:
 
-Every folder contains everything to deploy a function. The provided functions are (this list will be updated constantly):
+```bash
+make help
+```
 
-|  Function | Description | Input | Output |
-| --- | --- |---|---|
-|gce-toggle| Stop and start every vm, downscales or scales up every managed regional instance group in a GCP project | Project id via env variable|List of which machine or instance group has been modified|
-|consul-catalog-services| same of `consul catalog services` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}` |same as consul command but with `-tag` option enabled, content-type could be json and text/plain|
-|consul-members| same of `consul members` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`|same as consul command, content-type could be json and text/plain|
-|consul-op-raft-list| same as `consul operator raft list-peers` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`|same as consul command, content-type could be json and text/plain|
-|nomad-job-status| same as `nomad job status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
-|nomad-node-status| same as `nomad node status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
-|nomad-server-members| same as `nomad server members` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
-|vault-status| same as `vault status` command | body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`|same as nomad command, content-type could be json and text/plain|
+### Requirements
 
-In the root folder you can see `stack.yml`. This file is useful to deploy function in OpenFaas, read above for a quick guide.
+For building and deploying automation you need to install:
 
-> Go tested version: v1.16.1
+- docker 
+- gcloud
+- make
+- awk
 
 ### Google Cloud Functions
 
 You can deploy on GCP Cloud Functions once you have setup a project with all the mandatory services enabled (Cloud Functions and Cloud Build for example).
-Obviously you need `gcloud` tool and `go` (v1.16.1) installed.
 
-then we have to choose a function and do:
+Then you have to choose a function and do:
 
 ```bash
-make buildgcf func=consul-members project_id=functest-307416 region=us-central1
+make buildgcf func=<function_name> project_id=<project_id> region=<region>
 ```
 
-then wait for building and deploying.
+where `<function>` is the choosen function, `<project_id>` is the GCP project id and `<region>` is the region for your Cloud Function container.
+
+### Google Cloud Run
+
+The functions can be deployed to Google Cloud Run.
+Before start, you have to docker login to the GCP registry where the containers will be pull from (us.gcr.io, gcr.io, etc..).
+
+Then:
+
+```bash
+make buildgcr func=<function> project_id=<project_id> registry=<registry> region=<region>
+```
+
+where `<function>` is the choosen function, `<project_id>` is the GCP project id, `<registry>` is GCP registry where you have just logged in and `<region>` is the region for your Cloud Run container.
 
 ### OpenFAAS
 
@@ -55,8 +82,88 @@ export OPENFAAS_URL=http://faasd-gateway:8080
 
 You also need to change the image path for every function (needed for docker pushing) in `stack.yml`. You will have to let openfaas login to your image registry correctly. More at OpenFaas documentation [https://docs.openfaas.com](https://docs.openfaas.com)
 
-Then simply:
+#### faas up
+
+With this command you will build and deploy to OpenFaas:
 
 ```bash
-make faasup func=consul-members
+make faasup func=<function_name>
 ```
+
+#### faas delete
+
+You can delete the function from Openfaas with:
+
+```bash
+make faasdelete func=<function_name>
+```
+
+## Functions
+
+> Go tested version: v1.16.1
+
+Every folder contains everything to deploy a function. This list will be updated constantly.
+
+### Google
+
+#### gce-toggle
+
+* __description__: stop and start every vm, downscales or scales up (to 3 instances) every managed regional instance group in a GCP project in a "toggle" way
+* __input__: project id via env variable
+* __output__: list of which machine or instance group has been modified
+
+### Hashicorp Vault
+
+#### vault-status
+
+* __description__: same as `vault status` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`
+* __output__: same as nomad command, content-type could be json and text/plain
+
+#### vault-read
+
+* __description__: same as `vault read` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`
+* __output__: same as nomad command, content-type could be json and text/plain
+
+### Hashicorp Consul
+
+#### consul-catalog-services
+
+* __description__: same of `consul catalog services` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}` 
+* __output__:  same as consul command but with `-tag` option enabled, content-type could be json and text/plain
+
+#### consul-members 
+
+* __description__: same of `consul members` command  
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`
+* __output__: same as consul command, content-type could be json and text/plain
+
+#### consul-op-raft-list
+
+* __description__: same as `consul operator raft list-peers` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`
+* __output__: same as consul command, content-type could be json and text/plain
+
+### Hashicorp Nomad
+
+#### nomad-job-status 
+
+* __description__: same as `nomad job status` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
+* __output__: same as nomad command, content-type could be json and text/plain
+
+#### nomad-node-status
+
+* __description__: same as `nomad node status` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
+* __output__: same as nomad command, content-type could be json and text/plain
+
+#### nomad-server-members
+
+* __description__: same as `nomad server members` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
+* __output__: same as nomad command, content-type could be json and text/plain
+
+
