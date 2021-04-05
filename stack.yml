@@ -56,3 +56,9 @@ functions:
     image: efbar/more-serverless:vault-status-0.0.1
     build_args:
       GO111MODULE: on
+  vault-read:
+    lang: golang-middleware
+    handler: ./vault-read
+    image: efbar/vault-read:vault-read-0.0.1
+    build_args:
+      GO111MODULE: on
