@@ -8,6 +8,16 @@ buildgcf:
 	@-$(eval SUBF := $(shell echo $(func)| tr -d '-'))
 	@-cd $(func)/$(SUBF) && go mod vendor && gcloud functions deploy $(func) --entry-point=Serve --runtime=go113 --trigger-http --set-env-vars "PROJECT_ID=$(project_id),REGION=$(region)" --memory 128M --quiet
 
+## - buildgcr func=<function> project_id=<project_id> registry=<registry> region=<region>, build function with OpenFaas builder
+buildgcr:
+
+	@-faas-cli build --filter $(func)
+	@-$(eval IMAGE := $(shell cat stack.yml| grep vault-read | grep image | awk '{print $$2}'))
+	@-$(eval IMAGE_NAME := $(shell echo "$(IMAGE)" | cut -d'/' -f2-))
+	@-docker tag $(IMAGE) $(registry)/$(project_id)/$(IMAGE_NAME)
+	@-docker push $(registry)/$(project_id)/$(IMAGE_NAME)
+	@-gcloud run deploy $(func) --image $(registry)/$(project_id)/$(IMAGE_NAME) --platform managed --memory 128M --region $(region) 
+
 ## - faasdelete func=<function>, delete function from OpenFaas
 faasdelete:
 
