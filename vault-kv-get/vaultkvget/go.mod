@@ -1,4 +1,4 @@
-module github.com/efbar/more-serverless/vault-read/vaultread
+module github.com/efbar/more-serverless/vault-kv-get/vaultkvget
 
 go 1.16
 
@@ -18,9 +18,5 @@ require (
 	github.com/opencontainers/image-spec v1.0.1
 	github.com/ryanuber/columnize v2.1.2+incompatible
 	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
-	golang.org/x/net v0.0.0-20210331212208-0fccb6fa2b5c // indirect
-	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
-	google.golang.org/grpc v1.36.1 // indirect
 	gotest.tools/v3 v3.0.3 // indirect
 )

@@ -3,9 +3,9 @@ package function
 import (
 	"net/http"
 
-	"github.com/efbar/more-serverless/vault-read/vaultread"
+	"github.com/efbar/more-serverless/vault-kv-get/vaultkvget"
 )
 
 func Handle(w http.ResponseWriter, r *http.Request) {
-	vaultread.Serve(w, r)
+	vaultkvget.Serve(w, r)
 }

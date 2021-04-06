@@ -1,4 +1,4 @@
-package vaultread
+package vaultkvget
 
 import (
 	"encoding/json"

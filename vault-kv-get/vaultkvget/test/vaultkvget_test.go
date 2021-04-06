@@ -14,7 +14,7 @@ import (
 	network "github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
-	"github.com/efbar/more-serverless/vault-read/vaultread"
+	"github.com/efbar/more-serverless/vault-kv-get/vaultkvget"
 	vault "github.com/hashicorp/vault/api"
 	v1 "github.com/opencontainers/image-spec/specs-go/v1"
 )
@@ -102,7 +102,7 @@ func TestFunc(t *testing.T) {
 
 		rr := httptest.NewRecorder()
 
-		handler := http.HandlerFunc(vaultread.Serve)
+		handler := http.HandlerFunc(vaultkvget.Serve)
 
 		handler.ServeHTTP(rr, req)
 
