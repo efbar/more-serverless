@@ -18,7 +18,7 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
       - [gce-toggle](#gce-toggle)
     - [Hashicorp Vault](#hashicorp-vault)
       - [vault-status](#vault-status)
-      - [vault-read](#vault-read)
+      - [vault-kv-get](#vault-kv-get)
     - [Hashicorp Consul](#hashicorp-consul)
       - [consul-catalog-services](#consul-catalog-services)
       - [consul-members](#consul-members)
@@ -120,7 +120,7 @@ Every folder contains everything to deploy a function. This list will be updated
 * __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`
 * __output__: same as nomad command, content-type could be json and text/plain
 
-#### vault-read
+#### vault-kv-get
 
 * __description__: same as `vault read` command
 * __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`

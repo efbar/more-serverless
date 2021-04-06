@@ -1,0 +1,1 @@
+replace github.com/efbar/more-serverless/vault-kv-put/vaultkvput => ./function/vaultkvput
