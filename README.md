@@ -8,9 +8,9 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
 - [More Serverless](#more-serverless)
   - [Usage](#usage)
     - [Requirements](#requirements)
+    - [OpenFAAS](#openfaas)
     - [Google Cloud Functions](#google-cloud-functions)
     - [Google Cloud Run](#google-cloud-run)
-    - [OpenFAAS](#openfaas)
       - [faas up](#faas-up)
       - [faas delete](#faas-delete)
   - [Functions](#functions)
@@ -49,6 +49,16 @@ For building and deploying automation you need to install:
 - make
 - awk
 
+### OpenFAAS
+
+For OpenFaas you need for sure `faas-cli` and you have to set some variables like:
+
+```bash
+export OPENFAAS_URL=http://faasd-gateway:8080
+```
+
+You also need to change the image path for every function (needed for docker pushing) in `stack.yml`. You will have to let openfaas login to your image registry correctly. More at OpenFaas documentation [https://docs.openfaas.com](https://docs.openfaas.com)
+
 ### Google Cloud Functions
 
 You can deploy on GCP Cloud Functions once you have setup a project with all the mandatory services enabled (Cloud Functions and Cloud Build for example).
@@ -64,6 +74,9 @@ where `<function>` is the choosen function, `<project_id>` is the GCP project id
 ### Google Cloud Run
 
 The functions can be deployed to Google Cloud Run.
+
+**This automated part needs `faas-cli ` installed.**
+
 Before start, you have to docker login to the GCP registry where the containers will be pull from (us.gcr.io, gcr.io, etc..).
 
 Then:
@@ -73,16 +86,6 @@ make buildgcr func=<function> project_id=<project_id> registry=<registry> region
 ```
 
 where `<function>` is the choosen function, `<project_id>` is the GCP project id, `<registry>` is GCP registry where you have just logged in and `<region>` is the region for your Cloud Run container.
-
-### OpenFAAS
-
-For OpenFaas you need for sure `faas-cli` and you have to set some variables like:
-
-```bash
-export OPENFAAS_URL=http://faasd-gateway:8080
-```
-
-You also need to change the image path for every function (needed for docker pushing) in `stack.yml`. You will have to let openfaas login to your image registry correctly. More at OpenFaas documentation [https://docs.openfaas.com](https://docs.openfaas.com)
 
 #### faas up
 
@@ -119,25 +122,25 @@ Every folder contains everything to deploy a function. This list will be updated
 #### vault-status
 
 * __description__: same as `vault status` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`
+* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example"}`
 * __output__: same as vault command, content-type could be json and text/plain
 
 #### vault-kv-get
 
 * __description__: same as `vault kv get` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can be empty, `path` needs `data` subpath at the moment.
+* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can be empty, `path` needs `data` subpath at the moment.
 * __output__: same as vault command, content-type could be json and text/plain
 
 #### vault-kv-put
 
 * __description__: same as `vault kv put` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can not be empty, `path` needs `data` subpath at the moment.
+* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can not be empty, `path` needs `data` subpath at the moment.
 * __output__: same as vault command, content-type could be json and text/plain
 
 #### vault-transit
 
 * __description__: same as `vault transit` command, it can encrypt, decrypt, rewrap, rotate and create new key.
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example","path":"transit/encrypt/testkey","data":{"plaintext":"Zm9vYmFy"}}`, `data` could be empty only if `path` is not meant for rewrap, rotate or create new key.
+* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"transit/encrypt/testkey","data":{"plaintext":"Zm9vYmFy"}}`, `data` could be empty only if `path` is not meant for rewrap, rotate or create new key.
 * __output__: same as vault command, content-type could be json (in case of encrypt, decrypt and rewrap only) and text/plain
 
 ### Hashicorp Consul
