@@ -70,9 +70,9 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 	subpaths := strings.Split(path, "/")
 
 	var secret *vault.Secret
-	if len(data) == 0 && (subpaths[len(subpaths)-1] != "rotate" || subpaths[1] != "keys") {
+	if len(data) == 0 && subpaths[len(subpaths)-1] != "rotate" && subpaths[1] != "keys" {
 		fmt.Println("no data")
-		http.Error(w, "no data", http.StatusInternalServerError)
+		http.Error(w, "No data supplied", http.StatusInternalServerError)
 		return
 	}
 	secret, err = client.Logical().Write(path, data)
