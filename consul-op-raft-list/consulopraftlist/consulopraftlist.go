@@ -43,7 +43,12 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 	}
 
 	rb := RequestBody{}
-	json.Unmarshal(input, &rb)
+	err := json.Unmarshal(input, &rb)
+	if err != nil {
+		fmt.Println("Json parsing error:", err.Error())
+		http.Error(w, "Input data error", http.StatusBadRequest)
+		return
+	}
 
 	consulEndpoint := "http://localhost:8500"
 	if rb.Endpoint != "" {

@@ -49,14 +49,13 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		input = body
 	}
 
-	// if len(input) != 0 {
-	// 	fmt.Printf("request body: %s\n", string(input))
-	// } else {
-	// 	fmt.Println("empty body")
-	// }
-
 	rb := RequestBody{}
-	json.Unmarshal(input, &rb)
+	err := json.Unmarshal(input, &rb)
+	if err != nil {
+		fmt.Println("Json parsing error:", err.Error())
+		http.Error(w, "Input data error", http.StatusBadRequest)
+		return
+	}
 
 	nomadEndpoint := "http://localhost:4646"
 	if rb.Endpoint != "" {
