@@ -19,6 +19,8 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
     - [Hashicorp Vault](#hashicorp-vault)
       - [vault-status](#vault-status)
       - [vault-kv-get](#vault-kv-get)
+      - [vault-kv-put](#vault-kv-put)
+      - [vault-transit](#vault-transit)
     - [Hashicorp Consul](#hashicorp-consul)
       - [consul-catalog-services](#consul-catalog-services)
       - [consul-members](#consul-members)
@@ -118,13 +120,25 @@ Every folder contains everything to deploy a function. This list will be updated
 
 * __description__: same as `vault status` command
 * __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`
-* __output__: same as nomad command, content-type could be json and text/plain
+* __output__: same as vault command, content-type could be json and text/plain
 
 #### vault-kv-get
 
-* __description__: same as `vault read` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example"}`
-* __output__: same as nomad command, content-type could be json and text/plain
+* __description__: same as `vault kv get` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can be empty, `path` needs `data` subpath at the moment.
+* __output__: same as vault command, content-type could be json and text/plain
+
+#### vault-kv-put
+
+* __description__: same as `vault kv put` command
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can not be empty, `path` needs `data` subpath at the moment.
+* __output__: same as vault command, content-type could be json and text/plain
+
+#### vault-transit
+
+* __description__: same as `vault transit` command, it can encrypt, decrypt, rewrap, rotate and create new key.
+* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://vault-endpoint.example","path":"transit/encrypt/testkey","data":{"plaintext":"Zm9vYmFy"}}`, `data` could be empty only if `path` is not meant for rewrap, rotate or create new key.
+* __output__: same as vault command, content-type could be json (in case of encrypt, decrypt and rewrap only) and text/plain
 
 ### Hashicorp Consul
 
