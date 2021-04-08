@@ -50,18 +50,14 @@ func TestFunc(t *testing.T) {
 	defer removeContainerService(cli, resp.ID)
 
 	testData := map[string]interface{}{
-		"test": "data",
-	}
-	queryData := map[string]interface{}{
-		"data":    testData,
-		"options": map[string]interface{}{},
+		"foo": "bar",
 	}
 
 	jsonStruct := map[string]interface{}{
 		"endpoint": "http://127.0.0.1:" + vaultServerPort,
 		"token":    "root",
 		"path":     "secret/data/test",
-		"data":     queryData,
+		"data":     testData,
 	}
 
 	conf := vault.DefaultConfig()

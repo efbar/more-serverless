@@ -66,13 +66,18 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 
 	data := rb.Data
 
+	queryData := map[string]interface{}{
+		"data":    data,
+		"options": map[string]interface{}{},
+	}
+
 	var secret *vault.Secret
 	if len(data) == 0 {
 		fmt.Println("no data")
 		http.Error(w, "no data", http.StatusInternalServerError)
 		return
 	}
-	secret, err = client.Logical().Write(path, data)
+	secret, err = client.Logical().Write(path, queryData)
 	if err != nil {
 		fmt.Printf("Error writing data to %s: %s", path, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
