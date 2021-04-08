@@ -68,3 +68,9 @@ functions:
     image: efbar/vault-kv-put:vault-kv-put-0.0.1
     build_args:
       GO111MODULE: on
+  vault-transit:
+    lang: golang-middleware
+    handler: ./vault-transit
+    image: efbar/vault-transit:vault-transit-0.0.1
+    build_args:
+      GO111MODULE: on
