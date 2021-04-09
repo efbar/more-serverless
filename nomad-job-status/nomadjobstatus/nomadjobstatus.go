@@ -51,14 +51,15 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	nomadEndpoint := "http://localhost:4646"
-	if rb.Endpoint != "" {
-		nomadEndpoint = rb.Endpoint
+	if len(rb.Endpoint) == 0 {
+		fmt.Println("empty endpoint")
+		http.Error(w, "empty endpoint", http.StatusBadRequest)
+		return
 	}
 
 	conf := nomad.DefaultConfig()
 
-	conf.Address = nomadEndpoint
+	conf.Address = rb.Endpoint
 
 	client, err := nomad.NewClient(conf)
 	if err != nil {

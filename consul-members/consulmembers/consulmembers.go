@@ -68,14 +68,15 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	consulEndpoint := "http://localhost:8500"
-	if rb.Endpoint != "" {
-		consulEndpoint = rb.Endpoint
+	if len(rb.Endpoint) == 0 {
+		fmt.Println("empty endpoint")
+		http.Error(w, "empty endpoint", http.StatusBadRequest)
+		return
 	}
 
 	conf := consul.DefaultConfig()
 
-	conf.Address = consulEndpoint
+	conf.Address = rb.Endpoint
 
 	if rb.Token != "" {
 		conf.Token = rb.Token

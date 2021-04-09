@@ -43,14 +43,15 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	vaultEndpoint := "http://localhost:8200"
-	if rb.Endpoint != "" {
-		vaultEndpoint = rb.Endpoint
+	if len(rb.Endpoint) == 0 {
+		fmt.Println("empty endpoint")
+		http.Error(w, "empty endpoint", http.StatusBadRequest)
+		return
 	}
 
 	conf := vault.DefaultConfig()
 
-	conf.Address = vaultEndpoint
+	conf.Address = rb.Endpoint
 
 	client, err := vault.NewClient(conf)
 	if err != nil {
