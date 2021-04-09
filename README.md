@@ -9,10 +9,10 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
   - [Usage](#usage)
     - [Requirements](#requirements)
     - [OpenFAAS](#openfaas)
-    - [Google Cloud Functions](#google-cloud-functions)
-    - [Google Cloud Run](#google-cloud-run)
       - [faas up](#faas-up)
       - [faas delete](#faas-delete)
+    - [Google Cloud Functions](#google-cloud-functions)
+    - [Google Cloud Run](#google-cloud-run)
   - [Functions](#functions)
     - [Google](#google)
       - [gce-toggle](#gce-toggle)
@@ -59,6 +59,22 @@ export OPENFAAS_URL=http://faasd-gateway:8080
 
 You also need to change the image path for every function (needed for docker pushing) in `stack.yml`. You will have to let openfaas login to your image registry correctly. More at OpenFaas documentation [https://docs.openfaas.com](https://docs.openfaas.com)
 
+#### faas up
+
+With this command you will build and deploy to OpenFaas:
+
+```bash
+make faasup func=<function_name>
+```
+
+#### faas delete
+
+You can delete the function from Openfaas with:
+
+```bash
+make faasdelete func=<function_name>
+```
+
 ### Google Cloud Functions
 
 You can deploy on GCP Cloud Functions once you have setup a project with all the mandatory services enabled (Cloud Functions and Cloud Build for example).
@@ -86,22 +102,6 @@ make buildgcr func=<function> project_id=<project_id> registry=<registry> region
 ```
 
 where `<function>` is the choosen function, `<project_id>` is the GCP project id, `<registry>` is GCP registry where you have just logged in and `<region>` is the region for your Cloud Run container.
-
-#### faas up
-
-With this command you will build and deploy to OpenFaas:
-
-```bash
-make faasup func=<function_name>
-```
-
-#### faas delete
-
-You can delete the function from Openfaas with:
-
-```bash
-make faasdelete func=<function_name>
-```
 
 ## Functions
 
