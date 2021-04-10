@@ -26,7 +26,7 @@ faasup: faasdelete $(func)
 
 	@-faas-cli up --filter $(func)
 
-.PHONY: help test clean
+.PHONY: help
 help: Makefile
 	@echo
 	@echo " 	usage: make <command> <args>"
