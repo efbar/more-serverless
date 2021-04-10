@@ -1,6 +1,3 @@
-PROJECT_NAME=more-serverless
-VERSION=1.0.0
-
 ## $ make buildgcf func=<function> project_id=<project_id> region=<region>
 buildgcf:
     
