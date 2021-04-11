@@ -15,7 +15,6 @@ import (
 )
 
 type RequestBody struct {
-	Token    string `json:"token"`
 	Endpoint string `json:"endpoint"`
 }
 
@@ -87,10 +86,6 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	}
-
-	if rb.Token != "" {
-		client.SetToken(rb.Token)
 	}
 
 	status, err := client.Sys().SealStatus()
