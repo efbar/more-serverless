@@ -122,7 +122,7 @@ Every folder contains everything to deploy a function. This list will be updated
 #### vault-status
 
 * __description__: same as `vault status` command
-* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example"}`
+* __input__: body: `{"endpoint":"https://vault-endpoint.example"}`
 * __output__: same as vault command, content-type could be json and text/plain
 
 #### vault-kv-get
