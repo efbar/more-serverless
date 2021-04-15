@@ -16,7 +16,7 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
   - [Functions](#functions)
     - [Google](#google)
       - [gce-toggle](#gce-toggle)
-      - [gce-toggle](#gce-toggle-1)
+      - [gce-list](#gce-list)
     - [Hashicorp Vault](#hashicorp-vault)
       - [vault-status](#vault-status)
       - [vault-kv-get](#vault-kv-get)
@@ -121,7 +121,7 @@ Every folder contains everything to deploy a function. This list will be updated
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
 
-#### gce-toggle
+#### gce-list
 
 * __description__: same as `gcloud compute instances list` command
 * __input__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization.
