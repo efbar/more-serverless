@@ -16,6 +16,7 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
   - [Functions](#functions)
     - [Google](#google)
       - [gce-toggle](#gce-toggle)
+      - [gce-toggle](#gce-toggle-1)
     - [Hashicorp Vault](#hashicorp-vault)
       - [vault-status](#vault-status)
       - [vault-kv-get](#vault-kv-get)
@@ -113,9 +114,18 @@ Every folder contains everything to deploy a function. This list will be updated
 
 #### gce-toggle
 
-* __description__: stop and start every vm, downscales or scales up (to 3 instances) every managed regional instance group in a GCP project in a "toggle" way
-* __input__: project id via env variable
+* __description__: stop and start every VM, downscales or scales up (to 3 instances) every managed regional instance group in a GCP project in a "toggle" way
+* __input__: project id and region via env variable (look `env_vars`)
 * __output__: list of which machine or instance group has been modified
+* __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function
+* __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
+
+
+#### gce-toggle
+
+* __description__: same as `gcloud compute instances list` command
+* __input__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization.
+* __output__: list every VM in project
 * __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
