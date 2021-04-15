@@ -6,9 +6,9 @@ functions:
   gce-toggle:
     lang: golang-middleware
     handler: ./gce-toggle
-    image: efbar/more-serverless:gce-toggle-0.0.1
+    image: efbar/gce-toggle:1.0.0
     secrets:
-      - sa-gcp # faas-cli secret create sa-gcp --from-file=/path/to/file/sa-key.json
+      - gce-sa-gcp # faas-cli secret create sa-gcp --from-file=/path/to/file/sa-key.json
     build_args:
       GO111MODULE: on
     environment:
@@ -17,60 +17,60 @@ functions:
   nomad-job-status:
     lang: golang-middleware
     handler: ./nomad-job-status
-    image: efbar/more-serverless:nomad-job-status-0.0.1
+    image: efbar/nomad-job-status:1.0.0
     build_args:
       GO111MODULE: on
   nomad-node-status:
     lang: golang-middleware
     handler: ./nomad-node-status
-    image: efbar/more-serverless:nomad-node-status-0.0.1
+    image: efbar/nomad-node-status:1.0.0
     build_args:
       GO111MODULE: on
   nomad-server-members:
     lang: golang-middleware
     handler: ./nomad-server-members
-    image: efbar/more-serverless:nomad-server-members-0.0.1
+    image: efbar/nomad-server-members:1.0.0
     build_args:
       GO111MODULE: on
   consul-members:
     lang: golang-middleware
     handler: ./consul-members
-    image: efbar/more-serverless:consul-members-0.0.1
+    image: efbar/consul-members:1.0.0
     build_args:
       GO111MODULE: on
   consul-catalog-services:
     lang: golang-middleware
     handler: ./consul-catalog-services
-    image: efbar/more-serverless:consul-catalog-services-0.0.1
+    image: efbar/consul-catalog-services:1.0.0
     build_args:
       GO111MODULE: on
   consul-op-raft-list:
     lang: golang-middleware
     handler: ./consul-op-raft-list
-    image: efbar/more-serverless:consul-op-raft-list-0.0.1
+    image: efbar/consul-op-raft-list:1.0.0
     build_args:
       GO111MODULE: on
   vault-status:
     lang: golang-middleware
     handler: ./vault-status
-    image: efbar/more-serverless:vault-status-0.0.1
+    image: efbar/vault-status:1.0.0
     build_args:
       GO111MODULE: on
   vault-kv-get:
     lang: golang-middleware
     handler: ./vault-kv-get
-    image: efbar/vault-kv-get:vault-kv-get-0.0.1
+    image: efbar/vault-kv-get:1.0.0
     build_args:
       GO111MODULE: on
   vault-kv-put:
     lang: golang-middleware
     handler: ./vault-kv-put
-    image: efbar/vault-kv-put:vault-kv-put-0.0.1
+    image: efbar/vault-kv-put:1.0.0
     build_args:
       GO111MODULE: on
   vault-transit:
     lang: golang-middleware
     handler: ./vault-transit
-    image: efbar/vault-transit:vault-transit-0.0.1
+    image: efbar/vault-transit:1.0.0
     build_args:
       GO111MODULE: on
