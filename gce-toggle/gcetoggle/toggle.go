@@ -13,7 +13,7 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Toggle(w http.ResponseWriter, r *http.Request) {
+func Serve(w http.ResponseWriter, r *http.Request) {
 
 	var input []byte
 

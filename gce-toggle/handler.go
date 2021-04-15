@@ -3,11 +3,11 @@ package function
 import (
 	"net/http"
 
-	"github.com/efbar/more-serverless/gce-toggle/toggle"
+	toggle "github.com/efbar/more-serverless/gce-toggle/gcetoggle"
 )
 
 func Handle(w http.ResponseWriter, r *http.Request) {
 
-	toggle.Toggle(w, r)
+	toggle.Serve(w, r)
 
 }
