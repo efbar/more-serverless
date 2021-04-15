@@ -14,6 +14,17 @@ functions:
     environment:
       PROJECT_ID: "functest-307416"
       REGION: "us-central1"
+  gce-list:
+    lang: golang-middleware
+    handler: ./gce-list
+    image: efbar/gce-list:1.0.0
+    secrets:
+      - gce-sa-gcp # faas-cli secret create sa-gcp --from-file=/path/to/file/sa-key.json
+    build_args:
+      GO111MODULE: on
+    environment:
+      PROJECT_ID: "functest-307416"
+      REGION: "us-central1"
   nomad-job-status:
     lang: golang-middleware
     handler: ./nomad-job-status
