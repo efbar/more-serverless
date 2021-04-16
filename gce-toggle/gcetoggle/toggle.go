@@ -30,9 +30,7 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		input = reqBody
 	}
 
-	if len(input) != 0 {
-		fmt.Printf("request body: %s", string(input))
-	} else {
+	if len(input) == 0 {
 		fmt.Println("empty body")
 	}
 
@@ -41,10 +39,18 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 	projectId := os.Getenv("PROJECT_ID")
 	projectRegion := os.Getenv("REGION")
 
-	var computeService *compute.Service
 	var err error
-	if len(input) != 0 {
-		computeService, err = compute.NewService(ctx, option.WithCredentialsFile(string(input)))
+	var secret string
+	if _, err := os.Stat("/var/openfaas/secrets/gce-sa-gcp"); err == nil {
+		secretFile, _ := ioutil.ReadFile("/var/openfaas/secrets/gce-sa-gcp")
+		secret = string(secretFile)
+	}
+
+	var computeService *compute.Service
+	if len(secret) != 0 {
+		computeService, err = compute.NewService(ctx, option.WithCredentialsFile("/var/openfaas/secrets/gce-sa-gcp"))
+	} else if len(input) != 0 {
+		computeService, err = compute.NewService(ctx, option.WithCredentialsJSON(input))
 	} else {
 		computeService, err = compute.NewService(ctx)
 	}
