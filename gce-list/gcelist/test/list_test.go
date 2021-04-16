@@ -20,23 +20,38 @@ func init() {
 
 func TestFunc(t *testing.T) {
 
-	jkey, err := ioutil.ReadFile(jsonkeyPath)
-	if err != nil {
-		t.Log(err.Error())
+	tt := []struct {
+		contentType string
+	}{
+		{
+			contentType: "text/plain",
+		},
+		{
+			contentType: "application/json",
+		},
 	}
 
-	req := httptest.NewRequest("GET", "/", strings.NewReader(string(jkey)))
+	for _, tr := range tt {
 
-	rr := httptest.NewRecorder()
+		jkey, err := ioutil.ReadFile(jsonkeyPath)
+		if err != nil {
+			t.Log(err.Error())
+		}
 
-	handler := http.HandlerFunc(list.Serve)
+		req := httptest.NewRequest("GET", "/", strings.NewReader(string(jkey)))
+		req.Header.Set("Content-Type", tr.contentType)
 
-	handler.ServeHTTP(rr, req)
+		rr := httptest.NewRecorder()
 
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
+		handler := http.HandlerFunc(list.Serve)
+
+		handler.ServeHTTP(rr, req)
+
+		if status := rr.Code; status != http.StatusOK {
+			t.Errorf("handler returned wrong status code: got %v want %v",
+				status, http.StatusOK)
+		}
+
+		fmt.Printf("response body: \n%s\n", rr.Body)
 	}
-
-	fmt.Printf("response body: \n%s\n", rr.Body)
 }
