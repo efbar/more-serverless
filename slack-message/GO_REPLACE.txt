@@ -1,0 +1,1 @@
+replace github.com/efbar/more-serverless/slack-message/slackmessage => ./function/slackmessage

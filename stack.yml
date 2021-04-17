@@ -85,3 +85,9 @@ functions:
     image: efbar/vault-transit:1.0.0
     build_args:
       GO111MODULE: on
+  slack-message:
+    lang: golang-middleware
+    handler: ./slack-message
+    image: efbar/more-serverless:slack-message-1.0.0
+    build_args:
+      GO111MODULE: on
