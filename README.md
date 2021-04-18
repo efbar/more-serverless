@@ -30,6 +30,8 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
       - [nomad-job-status](#nomad-job-status)
       - [nomad-node-status](#nomad-node-status)
       - [nomad-server-members](#nomad-server-members)
+    - [Slack functions](#slack-functions)
+      - [slack-message](#slack-message)
 
 ## Usage
 
@@ -123,10 +125,10 @@ Every folder contains everything to deploy a function. This list will be updated
 
 #### gce-list
 
-* __description__: same as `gcloud compute instances list` command
-* __input__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization.
-* __output__: list every VM in project
-* __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function
+* __description__: same as `gcloud compute instances list` command. Optionally, it can send the output as a message to a Slack Channel.
+* __input__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization. For sending Slack message `Content-Type` header must be set to `text/plain`. 
+* __output__: list every VM in the GCP project defined in `PROJECT_ID`.
+* __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function (those are mandatory). For sending the output as a Slack message you must add `SLACK_TOKEN` and `SLACK_CHANNEL`, `SLACK_EMOJI` is optional.
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
 ### Hashicorp Vault
@@ -196,3 +198,10 @@ Every folder contains everything to deploy a function. This list will be updated
 * __output__: same as nomad command, content-type could be json and text/plain
 
 
+### Slack functions
+
+#### slack-message
+
+* __description__: send a message to a Slack channel
+* __input__: body: `{"token":"xoxp-123456789012-123456789012-123456789012-1234567890121234567890127asd5ff","message":"Hello world","channel":"C123TESTCH1"}`
+* __output__: it will logs both message sent positively or not
