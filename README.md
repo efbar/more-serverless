@@ -89,6 +89,7 @@ make buildgcf func=<function_name> project_id=<project_id> region=<region>
 ```
 
 where `<function>` is the choosen function, `<project_id>` is the GCP project id and `<region>` is the region for your Cloud Function container.
+Optionally can be added some environment variables with `env_vars=<VAR1=value1,VAR2=value2>`.
 
 ### Google Cloud Run
 
@@ -105,6 +106,7 @@ make buildgcr func=<function> project_id=<project_id> registry=<registry> region
 ```
 
 where `<function>` is the choosen function, `<project_id>` is the GCP project id, `<registry>` is GCP registry where you have just logged in and `<region>` is the region for your Cloud Run container.
+Optionally can be added some environment variables with `env_vars=<VAR1=value1,VAR2=value2>`.
 
 ## Functions
 
