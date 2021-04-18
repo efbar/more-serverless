@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	message "github.com/efbar/more-serverless/slack-message/slackmessage"
 	"github.com/ryanuber/columnize"
 	compute "google.golang.org/api/compute/v1"
 	"google.golang.org/api/option"
@@ -101,6 +102,18 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		columnConf.Glue = "  "
 		columnConf.NoTrim = false
 		resBody := columnize.Format(out, columnConf)
+
+		slackToken := os.Getenv("SLACK_TOKEN")
+		slackChannelID := os.Getenv("SLACK_CHANNEL")
+		slackEmoji := os.Getenv("SLACK_EMOJI")
+		if len(slackToken) > 0 && len(slackChannelID) > 0 {
+			slackMessage := "From GCP's `" + projectId + "` project " + slackEmoji + "\n```" + resBody + "```"
+			sent, err := message.Send(slackToken, slackMessage, slackChannelID)
+			if err != nil {
+				fmt.Printf("slack error: %s\n", err)
+			}
+			fmt.Println(sent)
+		}
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-type", "text/plain")
