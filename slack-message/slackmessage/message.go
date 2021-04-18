@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/slack-go/slack"
 )
@@ -83,6 +85,6 @@ func Send(token string, message string, channelID string) (string, error) {
 	if err != nil {
 		return "slack message not sent", err
 	}
-
-	return fmt.Sprintf("Message successfully sent to channel %s at %s", channelID, timestamp), nil
+	timest, _ := strconv.ParseFloat(timestamp, 64)
+	return fmt.Sprintf("Message successfully sent to channel %s at %s", channelID, time.Unix(int64(timest), 0).Format("2006-01-02T15:04:05Z07:00")), nil
 }
