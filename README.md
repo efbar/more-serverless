@@ -17,6 +17,7 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
     - [Google](#google)
       - [gce-toggle](#gce-toggle)
       - [gce-list](#gce-list)
+      - [gcs-make-bucket](#gcs-make-bucket)
     - [Hashicorp Vault](#hashicorp-vault)
       - [vault-status](#vault-status)
       - [vault-kv-get](#vault-kv-get)
@@ -119,8 +120,8 @@ Every folder contains everything to deploy a function. This list will be updated
 #### gce-toggle
 
 * __description__: stop and start every VM, downscales or scales up (to 3 instances) every managed regional instance group in a GCP project in a "toggle" way
-* __input__: project id and region via env variable (look `env_vars`)
-* __output__: list of which machine or instance group has been modified
+* __request__: project id and region via env variable (look `env_vars`)
+* __response__: list of which machine or instance group has been modified
 * __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
@@ -128,9 +129,36 @@ Every folder contains everything to deploy a function. This list will be updated
 #### gce-list
 
 * __description__: same as `gcloud compute instances list` command. Optionally, it can send the output as a message to a Slack Channel.
-* __input__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization. For sending Slack message `Content-Type` header must be set to `text/plain`. 
-* __output__: list every VM in the GCP project defined in `PROJECT_ID`.
+* __request__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization. For sending Slack message `Content-Type` header must be set to `text/plain`. 
+* __response__: list every VM in the GCP project defined in `PROJECT_ID`.
 * __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function (those are mandatory). For sending the output as a Slack message you must add `SLACK_TOKEN` and `SLACK_CHANNEL`, `SLACK_EMOJI` is optional.
+* __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
+
+#### gcs-make-bucket
+
+* __description__: same as `gsutil mb` command. Optionally, it can send the response as a message to a Slack Channel.
+* __request__: project id via env variable (look `env_vars`). Json Body to pass to function can have these values: 
+  ```bash
+  {
+    "name": "my-bucket", # bucket name, MANDATORY
+    "location": "us", # default us
+    "locationType": "regional", 
+    "storageClass": "Standard", # default Standard
+    "uniformBucketLevelAccess": false, # bool, default false
+    "versioningEnabled": false, # bool, default false
+    "labels": {
+      "testkey": "testvalue"
+    },
+    "jsonKeyPath": "/Users/fbartolini/go/src/github.com/efbar/golang-serverless/functest-307416-8c6090f41644.json",
+    "slackToken" : "",
+    "slackChannel" : "",
+    "slackEmoji" : ""
+  }
+  ```
+  Json key file is read from `GOOGLE_APPLICATION_CREDENTIALS` first, then from `jsonKeyPath`, otherwise it gets IAM permissions from attached service account.
+  For sending Slack message (after bucket is created) `slackToken` and `slackChannel` must be present.
+  * __response__: name, project, gs Uri and Cloud console URI.
+* __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` if needed, where deploy the function (those are mandatory).
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
 ### Hashicorp Vault
@@ -138,66 +166,66 @@ Every folder contains everything to deploy a function. This list will be updated
 #### vault-status
 
 * __description__: same as `vault status` command
-* __input__: body: `{"endpoint":"https://vault-endpoint.example"}`
-* __output__: same as vault command, content-type could be json and text/plain
+* __request__: body: `{"endpoint":"https://vault-endpoint.example"}`
+* __response__: same as vault command, content-type could be json and text/plain
 
 #### vault-kv-get
 
 * __description__: same as `vault kv get` command
-* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can be empty, `path` needs `data` subpath at the moment.
-* __output__: same as vault command, content-type could be json and text/plain
+* __request__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can be empty, `path` needs `data` subpath at the moment.
+* __response__: same as vault command, content-type could be json and text/plain
 
 #### vault-kv-put
 
 * __description__: same as `vault kv put` command
-* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can not be empty, `path` needs `data` subpath at the moment.
-* __output__: same as vault command, content-type could be json and text/plain
+* __request__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"secret/data/test","data":{"foo":"bar"}}`, `data` can not be empty, `path` needs `data` subpath at the moment.
+* __response__: same as vault command, content-type could be json and text/plain
 
 #### vault-transit
 
 * __description__: same as `vault transit` command, it can encrypt, decrypt, rewrap, rotate and create new key.
-* __input__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"transit/encrypt/testkey","data":{"plaintext":"Zm9vYmFy"}}`, `data` could be empty only if `path` is not meant for rewrap, rotate or create new key.
-* __output__: same as vault command, content-type could be json (in case of encrypt, decrypt and rewrap only) and text/plain
+* __request__: body: `{"token":"s.4w0nd3rfu1t0k3n","endpoint":"https://vault-endpoint.example","path":"transit/encrypt/testkey","data":{"plaintext":"Zm9vYmFy"}}`, `data` could be empty only if `path` is not meant for rewrap, rotate or create new key.
+* __response__: same as vault command, content-type could be json (in case of encrypt, decrypt and rewrap only) and text/plain
 
 ### Hashicorp Consul
 
 #### consul-catalog-services
 
 * __description__: same of `consul catalog services` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}` 
-* __output__:  same as consul command but with `-tag` option enabled, content-type could be json and text/plain
+* __request__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}` 
+* __response__:  same as consul command but with `-tag` option enabled, content-type could be json and text/plain
 
 #### consul-members 
 
 * __description__: same of `consul members` command  
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`
-* __output__: same as consul command, content-type could be json and text/plain
+* __request__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`
+* __response__: same as consul command, content-type could be json and text/plain
 
 #### consul-op-raft-list
 
 * __description__: same as `consul operator raft list-peers` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`
-* __output__: same as consul command, content-type could be json and text/plain
+* __request__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://consul-endpoint.example"}`
+* __response__: same as consul command, content-type could be json and text/plain
 
 ### Hashicorp Nomad
 
 #### nomad-job-status 
 
 * __description__: same as `nomad job status` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
-* __output__: same as nomad command, content-type could be json and text/plain
+* __request__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
+* __response__: same as nomad command, content-type could be json and text/plain
 
 #### nomad-node-status
 
 * __description__: same as `nomad node status` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
-* __output__: same as nomad command, content-type could be json and text/plain
+* __request__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
+* __response__: same as nomad command, content-type could be json and text/plain
 
 #### nomad-server-members
 
 * __description__: same as `nomad server members` command
-* __input__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
-* __output__: same as nomad command, content-type could be json and text/plain
+* __request__: body: `{"token":"12345678-1111-2222-3333-a6a53hfd8k1j","endpoint":"https://nomad-endpoint.example"}`
+* __response__: same as nomad command, content-type could be json and text/plain
 
 
 ### Slack functions
@@ -205,5 +233,5 @@ Every folder contains everything to deploy a function. This list will be updated
 #### slack-message
 
 * __description__: send a message to a Slack channel
-* __input__: body: `{"token":"xoxp-123456789012-123456789012-123456789012-1234567890121234567890127asd5ff","message":"Hello world","channel":"C123TESTCH1"}`
-* __output__: it will logs both message sent positively or not
+* __request__: body: `{"token":"xoxp-123456789012-123456789012-123456789012-1234567890121234567890127asd5ff","message":"Hello world","channel":"C123TESTCH1"}`
+* __response__: it will logs both message sent positively or not
