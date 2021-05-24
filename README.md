@@ -129,27 +129,39 @@ Every folder contains everything to deploy a function. This list will be updated
 #### gce-list
 
 * __description__: same as `gcloud compute instances list` command. Optionally, it can send the output as a message to a Slack Channel.
-* __request__: project id and region via env variable (look `env_vars`), you can pass a JSON key file of a service account for authentication and authorization. For sending Slack message `Content-Type` header must be set to `text/plain`. 
+* __request__: Json Body to pass to function can have these values:. 
+  ```json
+  {
+    "projectId": "functest-307416", // project id where VMs reside, mandatory
+    "region": "us-central1", // region where VMs reside, mandatory
+    "jsonKeyPath": "/path/to/key.json", 
+    "slackToken": "xoxp-123456789012-123456789012-123456789012-1234567890121234567890127asd5ff",
+    "slackChannel": "C123TESTCH1",
+    "slackEmoji": ":fidget_spinner:" 
+  }
+  ```
+  _For sending Slack message_ `Content-Type` _header must be set to_ `text/plain`.
+  `Content-Type` header can be `text/plain` or `application/json`.
 * __response__: list every VM in the GCP project defined in `PROJECT_ID`.
-* __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `REGION` where deploy the function (those are mandatory). For sending the output as a Slack message you must add `SLACK_TOKEN` and `SLACK_CHANNEL`, `SLACK_EMOJI` is optional.
+* __env_vars__: n `stack.yml`, under function `environment` key, set `GOOGLE_APPLICATION_CREDENTIALS` if needed, otherwise use `jsonKeyPath` value in json request body.
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
 #### gcs-make-bucket
 
 * __description__: same as `gsutil mb` command. Optionally, it can send the response as a message to a Slack Channel.
 * __request__: project id via env variable (look `env_vars`). Json Body to pass to function can have these values: 
-  ```bash
+  ```json
   {
-    "name": "my-bucket", # bucket name, MANDATORY
-    "location": "us", # default us
+    "name": "my-bucket", // bucket name, MANDATORY
+    "location": "us", // default us
     "locationType": "regional", 
-    "storageClass": "Standard", # default Standard
-    "uniformBucketLevelAccess": false, # bool, default false
-    "versioningEnabled": false, # bool, default false
+    "storageClass": "Standard", // default Standard
+    "uniformBucketLevelAccess": false, // bool, default false
+    "versioningEnabled": false, // bool, default false
     "labels": {
       "testkey": "testvalue"
     },
-    "jsonKeyPath": "/Users/fbartolini/go/src/github.com/efbar/golang-serverless/functest-307416-8c6090f41644.json",
+    "jsonKeyPath": "/path/to/key.json",
     "slackToken" : "",
     "slackChannel" : "",
     "slackEmoji" : ""
