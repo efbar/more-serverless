@@ -3,7 +3,6 @@ package testing
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,10 +11,10 @@ import (
 	list "github.com/efbar/more-serverless/gce-list/gcelist"
 )
 
-var jsonkeyPath string
+var jsonData string
 
 func init() {
-	flag.StringVar(&jsonkeyPath, "jsonkey", "", "json key file")
+	flag.StringVar(&jsonData, "jsonData", "", "json data input")
 }
 
 func TestFunc(t *testing.T) {
@@ -33,12 +32,7 @@ func TestFunc(t *testing.T) {
 
 	for _, tr := range tt {
 
-		jkey, err := ioutil.ReadFile(jsonkeyPath)
-		if err != nil {
-			t.Log(err.Error())
-		}
-
-		req := httptest.NewRequest("GET", "/", strings.NewReader(string(jkey)))
+		req := httptest.NewRequest("GET", "/", strings.NewReader(jsonData))
 		req.Header.Set("Content-Type", tr.contentType)
 
 		rr := httptest.NewRecorder()
