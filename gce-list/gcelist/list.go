@@ -9,6 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	message "github.com/efbar/more-serverless/slack-message/slackmessage"
 	"github.com/ryanuber/columnize"
@@ -24,6 +25,15 @@ type Instance struct {
 	InternalIP  string `json:"internal_ip"`
 	ExternalIP  string `json:"external_ip"`
 	Status      string `json:"status"`
+}
+
+type RequestBody struct {
+	ProjectId    string `json:"projectId"`
+	Region       string `json:"region"`
+	JsonKeyPath  string `json:"jsonKeyPath,omitempty"`
+	SlackToken   string `json:"slackToken,omitempty"`
+	SlackChannel string `json:"slackChannel,omitempty"`
+	SlackEmoji   string `json:"slackEmoji,omitempty"`
 }
 
 type Response struct {
@@ -52,26 +62,53 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("empty body")
 	}
 
-	ctx := context.Background()
-
-	projectId := os.Getenv("PROJECT_ID")
-	projectRegion := os.Getenv("REGION")
-
-	var computeService *compute.Service
-	var err error
-
-	var secret string
-
-	if _, err := os.Stat("/var/openfaas/secrets/gce-sa-gcp"); err == nil {
-		secretFile, _ := ioutil.ReadFile("/var/openfaas/secrets/gce-sa-gcp")
-		secret = string(secretFile)
+	rb := RequestBody{}
+	err := json.Unmarshal(input, &rb)
+	if err != nil {
+		fmt.Println("Json parsing error:", err.Error())
+		http.Error(w, "Input data error", http.StatusBadRequest)
+		return
 	}
 
-	if len(secret) != 0 {
-		computeService, err = compute.NewService(ctx, option.WithCredentialsFile("/var/openfaas/secrets/gce-sa-gcp"))
-	} else if len(input) != 0 {
-		computeService, err = compute.NewService(ctx, option.WithCredentialsJSON(input))
+	projectId := rb.ProjectId
+	if len(projectId) == 0 {
+		fmt.Println("empty projectId value")
+		http.Error(w, "Input data error", http.StatusBadRequest)
+		return
+	}
+	projectRegion := rb.Region
+	if len(projectRegion) == 0 {
+		fmt.Println("empty region value")
+		http.Error(w, "Input data error", http.StatusBadRequest)
+		return
+	}
+	googleCreds := os.Getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+	var serviceAccountPath string
+	if len(rb.JsonKeyPath) != 0 {
+		serviceAccountPath = rb.JsonKeyPath
+		fmt.Printf("using jsonKeyPath value %s\n", rb.JsonKeyPath)
 	} else {
+		serviceAccountPath = googleCreds
+		fmt.Printf("using google creds environment value %s\n", googleCreds)
+	}
+
+	var jsonKey string
+	if _, err := os.Stat(serviceAccountPath); err == nil {
+		jsonKeyFile, _ := ioutil.ReadFile(serviceAccountPath)
+		jsonKey = string(jsonKeyFile)
+	}
+
+	var computeService *compute.Service
+	ctx := context.Background()
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
+	defer cancel()
+
+	if len(jsonKey) != 0 {
+		computeService, err = compute.NewService(ctx, option.WithCredentialsFile(rb.JsonKeyPath))
+	} else {
+		fmt.Println("jsonkey empty, not using creds option")
 		computeService, err = compute.NewService(ctx)
 	}
 	if err != nil {
@@ -103,16 +140,8 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		columnConf.NoTrim = false
 		resBody := columnize.Format(out, columnConf)
 
-		slackToken := os.Getenv("SLACK_TOKEN")
-		slackChannelID := os.Getenv("SLACK_CHANNEL")
-		slackEmoji := os.Getenv("SLACK_EMOJI")
-		if len(slackToken) > 0 && len(slackChannelID) > 0 {
-			slackMessage := "From GCP's `" + projectId + "` project " + slackEmoji + "\n```" + resBody + "```"
-			sent, err := message.Send(slackToken, slackMessage, slackChannelID)
-			if err != nil {
-				fmt.Printf("slack error: %s\n", err)
-			}
-			fmt.Println(sent)
+		if len(rb.SlackToken) > 0 && len(rb.SlackChannel) > 0 {
+			slackNotification(&rb, resBody)
 		}
 
 		w.WriteHeader(http.StatusOK)
@@ -149,4 +178,17 @@ func Serve(w http.ResponseWriter, r *http.Request) {
 		w.Write(resBody)
 	}
 
+}
+
+func slackNotification(rb *RequestBody, resBody string) {
+	slackToken := rb.SlackToken
+	slackChannelID := rb.SlackChannel
+	slackEmoji := rb.SlackEmoji
+	slackMessage := "GCP message " + slackEmoji + "\n```" + resBody + "```"
+
+	sent, err := message.Send(slackToken, slackMessage, slackChannelID)
+	if err != nil {
+		fmt.Printf("slack error: %s\n", err)
+	}
+	fmt.Println(sent)
 }
