@@ -132,7 +132,7 @@ Every folder contains everything to deploy a function. This list will be updated
 
 * __description__: same as `gcloud compute instances list` command. Optionally, it can send the output as a message to a Slack Channel.
 * __request__: Json body to pass to function can have these values:. 
-  ```json
+  ```bash
   {
     "projectId": "functest-307416", // project id where VMs reside, mandatory
     "region": "us-central1", // region where VMs reside, mandatory
@@ -152,7 +152,7 @@ Every folder contains everything to deploy a function. This list will be updated
 
 * __description__: same as `gsutil mb` command. Optionally, it can send the response as a message to a Slack Channel.
 * __request__: Json body to pass to function can have these values: 
-  ```json
+  ```bash
   {
     "name": "my-bucket", // bucket name, MANDATORY
     "location": "us", // default us
@@ -179,7 +179,7 @@ Every folder contains everything to deploy a function. This list will be updated
 
 * __description__: same as `gsutil cp` command, but it will do it for every object inside the bucket. Useful to copy objects between buckets. Optionally, it can send the response as a message to a Slack Channel.
 * __request__: Json body to pass to function can have these values: 
-  ```json
+  ```bash
   {
     "srcBucket": "my-bucket", // bucket name to copy object from, MANDATORY
     "dstBucket": "my-project-id", // bucket name to copy object to, MANDATORY
@@ -199,7 +199,7 @@ Every folder contains everything to deploy a function. This list will be updated
 
 * __description__: same as `gsutil rb` command. Optionally, it can send the response as a message to a Slack Channel.
 * __request__: Json body to pass to function can have these values: 
-  ```json
+  ```bash
   {
     "name": "my-bucket", // bucket name, MANDATORY
     "projectId": "my-project-id", // gcp project id name, MANDATORY
