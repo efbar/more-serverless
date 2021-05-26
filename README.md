@@ -18,6 +18,7 @@ If you want to try OpenFaas locally have a look at [https://github.com/efbar/has
       - [gce-toggle](#gce-toggle)
       - [gce-list](#gce-list)
       - [gcs-make-bucket](#gcs-make-bucket)
+      - [gcs-cp-bucket (every object in it)](#gcs-cp-bucket-every-object-in-it)
       - [gcs-remove-bucket](#gcs-remove-bucket)
     - [Hashicorp Vault](#hashicorp-vault)
       - [vault-status](#vault-status)
@@ -171,6 +172,26 @@ Every folder contains everything to deploy a function. This list will be updated
   Json key file is read from `GOOGLE_APPLICATION_CREDENTIALS` first, then from `jsonKeyPath`, otherwise it gets IAM permissions from attached service account.
   For sending Slack message (after bucket is created) `slackToken` and `slackChannel` must be present.
   * __response__: In case of 200, with `application/json` header boddy will have name, project, gs Uri and Cloud console URI, with `text/plain` a confirmation message.
+* __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` if needed, where deploy the function (those are mandatory).
+* __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
+
+#### gcs-cp-bucket (every object in it)
+
+* __description__: same as `gsutil cp` command, but it will do it for every object inside the bucket. Useful to copy objects between buckets. Optionally, it can send the response as a message to a Slack Channel.
+* __request__: Json body to pass to function can have these values: 
+  ```json
+  {
+    "srcBucket": "my-bucket", // bucket name to copy object from, MANDATORY
+    "dstBucket": "my-project-id", // bucket name to copy object to, MANDATORY
+    "jsonKeyPath": "/path/to/key.json",
+    "slackToken" : "",
+    "slackChannel" : "",
+    "slackEmoji" : ""
+  }
+  ```
+  Json key file is read from `GOOGLE_APPLICATION_CREDENTIALS` first, then from `jsonKeyPath`, otherwise it gets IAM permissions from attached service account.
+  For sending Slack message (after bucket is created) `slackToken` and `slackChannel` must be present.
+  * __response__: In case of 200, with `application/json` header the body will have name and project id, with `text/plain` there will be a confirmation message.
 * __env_vars__: in `stack.yml`, under function `environment` key, set `PROJECT_ID` and `GOOGLE_APPLICATION_CREDENTIALS` if needed, where deploy the function (those are mandatory).
 * __secrets__: in `stack.yml`, under function `secrets` key set `<secret_name>` secret representing the json key file of the service account which has all the permissions you need to call the function (that you have to create with `faas-cli secret create `<secret_name>` --from-file=/path/to/file/sa-key.json`)
 
