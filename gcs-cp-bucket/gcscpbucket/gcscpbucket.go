@@ -27,8 +27,8 @@ type RequestBody struct {
 }
 
 type Result struct {
-	SrcObj    string `json:srcObj`
-	Completed bool   `json:completed`
+	SrcObj    string `json:"srcObj"`
+	Completed bool   `json:"completed"`
 	Error     string `json:"error,omitempty"`
 }
 
